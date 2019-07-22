@@ -1,0 +1,25 @@
+{
+    "name": "presslabs-stack/cli",
+    "description": "",
+    "type": "wp-cli-package",
+    "homepage": "https://github.com/presslabs-stack/cli",
+    "license": "MIT",
+    "authors": [],
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "config": {
+        "optimize-autoloader": true
+    },
+    "autoload": {
+        "psr-4": {
+            "Stack\\": "src/"
+        },
+        "files": [ "command.php" ]
+    },
+    "require": {
+        "wp-cli/wp-cli": "^2.1.0"
+    },
+    "require-dev": {
+        "behat/behat": "~2.5"
+    }
+}
