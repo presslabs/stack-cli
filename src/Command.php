@@ -7,7 +7,7 @@ define('RELEASE', basename(getcwd()));
 define('SKAFFOLD_DIR', getcwd());
 define('DEFAULT_DOMAIN', RELEASE . '.localstack.pl');
 define('CHART_DIR', 'chart');
-define('CHART_URL', 'https://github.com/presslabs/charts/raw/master/docs/wordpress-site-v0.1.6.tgz');
+define('CHART_URL', 'https://github.com/presslabs/charts/raw/master/docs/wordpress-site-v0.3.8.tgz');
 define('DEFAULT_PROD_KUBECONFIG_CONTEXT', 'default');
 
 /**
@@ -115,7 +115,7 @@ FROM quay.io/presslabs/wordpress-runtime:5.2-7.3.4-latest as builder
 RUN rm -rf /var/www/html
 COPY --chown=www-data:www-data . /var/www
 WORKDIR /var/www
-RUN composer install -n --no-ansi --no-dev --prefer-dist 
+RUN composer install -n --no-ansi --no-dev --prefer-dist
 RUN rm -rf .composer
 FROM quay.io/presslabs/wordpress-runtime:5.2-7.3.4-latest
 ENV DOCUMENT_ROOT=/var/www/$webroot
@@ -190,4 +190,3 @@ EOF;
         WP_CLI::success("🙌 Stack initialized successfuly!");
     }
 }
-

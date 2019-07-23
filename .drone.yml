@@ -1,0 +1,27 @@
+kind: pipeline
+name: php-7.3
+
+steps:
+  - name: test
+    image: quay.io/presslabs/php-runtime:7.3.7
+    user: root
+    commands:
+      - composer install --no-ansi --prefer-dist
+      - make test
+    environment:
+      DB_TEST_HOST: database
+      DB_TEST_NAME: wordpress_tests
+      DB_TEST_PASSWORD: not-so-secure-but-good-for-ci
+      DB_TEST_USER: wordpress
+    when:
+      event:
+      - push
+
+services:
+  - name: database
+    image: percona:5.7
+    environment:
+      MYSQL_DATABASE: wordpress_tests
+      MYSQL_PASSWORD: not-so-secure-but-good-for-ci
+      MYSQL_ROOT_PASSWORD: insecure-root-password-but-good-for-ci
+      MYSQL_USER: wordpress
