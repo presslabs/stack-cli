@@ -1,9 +1,9 @@
 kind: pipeline
-name: php-7.3
+name: php-7.2
 
 steps:
   - name: test
-    image: quay.io/presslabs/php-runtime:7.3.7
+    image: quay.io/presslabs/bfc
     user: root
     commands:
       - composer install --no-ansi --prefer-dist
