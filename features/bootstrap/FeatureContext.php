@@ -316,7 +316,6 @@ class FeatureContext extends BehatContext implements ClosuredContextInterface {
 			self::$db_settings['dbhost'] = getenv( 'WP_CLI_TEST_DBHOST' );
 		}
 
-		$this->drop_db();
 		$this->set_cache_dir();
 		$this->variables['CORE_CONFIG_SETTINGS'] = Utils\assoc_args_to_str( self::$db_settings );
 	}
@@ -503,39 +502,6 @@ class FeatureContext extends BehatContext implements ClosuredContextInterface {
 		$this->variables['CACHE_DIR'] = $path;
 	}
 
-	/**
-	 * Run a MySQL command with `$db_settings`.
-	 *
-	 * @param string $sql_cmd Command to run.
-	 * @param array $assoc_args Optional. Associative array of options. Default empty.
-	 * @param bool $add_database Optional. Whether to add dbname to the $sql_cmd. Default false.
-	 */
-	private static function run_sql( $sql_cmd, $assoc_args = array(), $add_database = false ) {
-		$default_assoc_args = array(
-			'host' => self::$db_settings['dbhost'],
-			'user' => self::$db_settings['dbuser'],
-			'pass' => self::$db_settings['dbpass'],
-		);
-		if ( $add_database ) {
-			$sql_cmd .= ' ' . escapeshellarg( self::$db_settings['dbname'] );
-		}
-		$start_time = microtime( true );
-		Utils\run_mysql_command( $sql_cmd, array_merge( $assoc_args, $default_assoc_args ) );
-		if ( self::$log_run_times ) {
-			self::log_proc_method_run_time( 'run_sql ' . $sql_cmd, $start_time );
-		}
-	}
-
-	public function create_db() {
-		$dbname = self::$db_settings['dbname'];
-		self::run_sql( 'mysql --no-defaults', array( 'execute' => "CREATE DATABASE IF NOT EXISTS $dbname" ) );
-	}
-
-	public function drop_db() {
-		$dbname = self::$db_settings['dbname'];
-		self::run_sql( 'mysql --no-defaults', array( 'execute' => "DROP DATABASE IF EXISTS $dbname" ) );
-	}
-
 	public function proc( $command, $assoc_args = array(), $path = '' ) {
 		if ( !empty( $assoc_args ) )
 			$command .= Utils\assoc_args_to_str( $assoc_args );
@@ -653,7 +619,6 @@ class FeatureContext extends BehatContext implements ClosuredContextInterface {
 
 		$subdir = $this->replace_variables( $subdir );
 
-		$this->create_db();
 		$this->create_run_dir();
 		$this->download_wp( $subdir );
 		$this->create_config( $subdir );
@@ -675,20 +640,17 @@ class FeatureContext extends BehatContext implements ClosuredContextInterface {
 
 		if ( $install_cache_path && file_exists( $install_cache_path ) ) {
 			self::copy_dir( $install_cache_path, $run_dir );
-			self::run_sql( 'mysql --no-defaults', array( 'execute' => "source {$install_cache_path}.sql" ), true /*add_database*/ );
 		} else {
 			$this->proc( 'wp core install', $install_args, $subdir )->run_check();
 			if ( $install_cache_path ) {
 				mkdir( $install_cache_path );
 				self::dir_diff_copy( $run_dir, self::$cache_dir, $install_cache_path );
-				self::run_sql( 'mysqldump --no-defaults', array( 'result-file' => "{$install_cache_path}.sql" ), true /*add_database*/ );
 			}
 		}
 	}
 
 	public function install_wp_with_composer( $vendor_directory = 'vendor' ) {
 		$this->create_run_dir();
-		$this->create_db();
 
 		$yml_path = $this->variables['RUN_DIR'] . "/wp-cli.yml";
 		file_put_contents( $yml_path, 'path: wordpress' );
