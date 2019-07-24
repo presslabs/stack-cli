@@ -2,15 +2,11 @@ kind: pipeline
 name: php-7.3.7
 
 steps:
-  - name: chown # we need to do this since our test container runs with www-data and drone clones with root
-    image: debian:stretch-slim
-    user: root
-    commands:
-      - chown -R www-data:www-data /drone/src
-
   - name: test
     image: quay.io/presslabs/php-runtime:7.3.7
+    user: root
     commands:
+      - apt-get update && apt-get install -y mysql-client
       - composer install --no-ansi --prefer-dist
       - make test
     environment:
