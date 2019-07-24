@@ -10,7 +10,7 @@ Feature: Test that WP-CLI loads.
       default
       """
 
-    When I run `cat input | wp stack init`
+    When I run `cat input | wp stack --allow-root init`
     Then STDOUT should contain:
       """
       Success: 🙌 Stack initialized successfuly!

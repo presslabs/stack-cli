@@ -47,6 +47,11 @@ if ( file_exists( __DIR__ . '/utils.php' ) ) {
         }
 }
 
+define('DB_TEST_NAME', getenv('DB_TEST_NAME') ?: 'wordpress');
+define('DB_TEST_USER', getenv('DB_TEST_USER') ?: 'wordpress');
+define('DB_TEST_PASSWORD', getenv('DB_TEST_PASSWORD') ?: 'wordpress');
+define('DB_TEST_HOST', getenv('DB_TEST_HOST') ?: '127.0.0.1');
+
 /**
  * Features context.
  */
@@ -83,10 +88,10 @@ class FeatureContext extends BehatContext implements ClosuredContextInterface {
          * The test database settings. All but `dbname` can be set via environment variables. The database is dropped at the start of each scenario and created on a "Given a WP installation" step.
          */
         private static $db_settings = array(
-                'dbname' => 'wordpress',
-                'dbuser' => 'wordpress',
-                'dbpass' => 'wordpress',
-                'dbhost' => '127.0.0.1',
+                'dbname' => DB_TEST_NAME,
+                'dbuser' => DB_TEST_USER,
+                'dbpass' => DB_TEST_PASSWORD,
+                'dbhost' => DB_TEST_HOST
         );
 
         /**
