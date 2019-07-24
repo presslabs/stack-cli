@@ -2,6 +2,7 @@
 namespace Stack;
 
 use \WP_CLI;
+use \WP_CLI_Command;
 
 define('RELEASE', basename(getcwd()));
 define('SKAFFOLD_DIR', getcwd());
@@ -13,16 +14,18 @@ define('DEFAULT_PROD_KUBECONFIG_CONTEXT', 'default');
 /**
  * Manage Presslabs Stack enabled WordPress projects
  */
-class Command
+class Command extends WP_CLI_Command
 {
     private function getWebroot()
     {
         $absParent = dirname(ABSPATH);
+
         if (file_exists($absParent. '/wp-config.php') && file_exists($absParent . '/index.php')) {
             // WordPress is installed as a subfolder of the document root
             return $absParent;
         }
-        return untrailingslashit(ABSPATH);
+
+        return rtrim(ABSPATH, '/\\');
     }
 
     private function relativeWebroot(string $cwd = "")
