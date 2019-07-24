@@ -167,7 +167,7 @@ class FeatureContext extends BehatContext implements ClosuredContextInterface {
                 if ( is_readable( self::$cache_dir . '/wp-config-sample.php' ) )
                         return;
 
-                $cmd = Utils\esc_cmd( 'wp --allow-root core download --force --path=%s', self::$cache_dir );
+                $cmd = Utils\esc_cmd( 'wp  core download --force --path=%s', self::$cache_dir );
                 if ( $wp_version ) {
                         $cmd .= Utils\esc_cmd( ' --version=%s', $wp_version );
                 }
@@ -183,7 +183,7 @@ class FeatureContext extends BehatContext implements ClosuredContextInterface {
                         self::log_run_times_before_suite( $event );
                 }
 
-                $result = Process::create( 'wp --allow-root cli info', null, self::get_process_env_variables() )->run_check();
+                $result = Process::create( 'wp  cli info', null, self::get_process_env_variables() )->run_check();
                 echo PHP_EOL;
                 echo $result->stdout;
                 echo PHP_EOL;
@@ -612,8 +612,8 @@ class FeatureContext extends BehatContext implements ClosuredContextInterface {
                 if ( $config_cache_path && file_exists( $config_cache_path ) ) {
                         copy( $config_cache_path, $run_dir . '/wp-config.php' );
                 } else {
-                        $result = $this->proc( 'wp --allow-root help', $params, $subdir )->run_check();
-                        $result = $this->proc( 'wp --allow-root config create', $params, $subdir )->run();
+                        $result = $this->proc( 'wp  help', $params, $subdir )->run_check();
+                        $result = $this->proc( 'wp  config create', $params, $subdir )->run();
 
                 echo PHP_EOL;
                 echo $result->stdout;
@@ -655,7 +655,7 @@ class FeatureContext extends BehatContext implements ClosuredContextInterface {
                 if ( $install_cache_path && file_exists( $install_cache_path ) ) {
                         self::copy_dir( $install_cache_path, $run_dir );
                 } else {
-                        $this->proc( 'wp --allow-root core install', $install_args, $subdir )->run_check();
+                        $this->proc( 'wp  core install', $install_args, $subdir )->run_check();
                         if ( $install_cache_path ) {
                                 mkdir( $install_cache_path );
                                 self::dir_diff_copy( $run_dir, self::$cache_dir, $install_cache_path );
@@ -685,7 +685,7 @@ class FeatureContext extends BehatContext implements ClosuredContextInterface {
                         'skip-email' => true,
                 );
 
-                $this->proc( 'wp --allow-root core install', $install_args )->run_check();
+                $this->proc( 'wp  core install', $install_args )->run_check();
         }
 
         public function composer_add_wp_cli_local_repository() {
