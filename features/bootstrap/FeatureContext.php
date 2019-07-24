@@ -613,12 +613,13 @@ class FeatureContext extends BehatContext implements ClosuredContextInterface {
                         copy( $config_cache_path, $run_dir . '/wp-config.php' );
                 } else {
                         $result = $this->proc( 'wp  help', $params, $subdir )->run_check();
-                        $result = $this->proc( 'wp  config create', $params, $subdir )->run();
+                        $result = $this->proc( 'wp  config create', $params, $subdir )->run_check();
 
-                echo PHP_EOL;
-                echo $result->stdout;
-                echo PHP_EOL;
+                        echo PHP_EOL;
+                        echo $result->stdout;
+                        echo PHP_EOL;
                         if ( $config_cache_path && file_exists( $run_dir . '/wp-config.php' ) ) {
+
                                 copy( $run_dir . '/wp-config.php', $config_cache_path );
                         }
                 }
@@ -655,7 +656,12 @@ class FeatureContext extends BehatContext implements ClosuredContextInterface {
                 if ( $install_cache_path && file_exists( $install_cache_path ) ) {
                         self::copy_dir( $install_cache_path, $run_dir );
                 } else {
-                        $this->proc( 'wp  core install', $install_args, $subdir )->run_check();
+                        $result = $this->proc( 'wp  core install', $install_args, $subdir )->run_check();
+
+                        echo PHP_EOL;
+                        echo $result->stdout;
+                        echo PHP_EOL;
+
                         if ( $install_cache_path ) {
                                 mkdir( $install_cache_path );
                                 self::dir_diff_copy( $run_dir, self::$cache_dir, $install_cache_path );
