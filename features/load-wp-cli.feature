@@ -1,6 +1,6 @@
-Feature: Test that WP-CLI loads.
+Feature: Test stack init
 
-  Scenario: WP-CLI loads for your tests
+  Scenario: stack init generates required files
     Given a WP install
     And a input file:
       """
@@ -36,5 +36,6 @@ Feature: Test that WP-CLI loads.
       ENV DOCUMENT_ROOT=/var/www/
       RUN rm -rf /var/www/html
       COPY --from=builder /var/www /var/www
-
       """
+    And the skaffold.yaml file should exist
+    And the chart/ directory should exist
