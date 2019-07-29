@@ -1,10 +1,20 @@
 {
-    "name": "presslabs-stack/cli",
-    "description": "",
+    "name": "presslabs/stack-wp-cli",
+    "description": "WP-CLI package for Presslabs Stack",
     "type": "wp-cli-package",
-    "homepage": "https://github.com/presslabs-stack/cli",
-    "license": "MIT",
-    "authors": [],
+    "homepage": "https://github.com/presslabs/stack-wp-cli",
+    "license": "Apache-2.0",
+    "authors": [
+        {
+            "name": "Presslabs",
+            "email": "ping@presslabs.com",
+            "homepage": "http://www.presslabs.com"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/presslabs/stack-wp-cli/issues",
+        "docs": "https://presslabs.com/docs/stack"
+    },
     "minimum-stability": "dev",
     "prefer-stable": true,
     "config": {
